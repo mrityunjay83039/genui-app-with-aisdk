@@ -1,69 +1,106 @@
-import Image from "next/image";
+import Link from "next/link";
+
+const FEATURES = [
+  {
+    title: "Instant Completions",
+    description:
+      "Powered by Vercel AI SDK and Google Gemini with clean request handling and retry support.",
+  },
+  {
+    title: "Accessible by Default",
+    description:
+      "Semantic landmarks, keyboard-first shortcuts, IME-safe submission, and screen-reader feedback.",
+  },
+  {
+    title: "Adaptive Light & Dark UI",
+    description:
+      "Automatically matches your system color scheme, contrast preferences, and reduced-motion settings.",
+  },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="flex min-h-[100dvh] flex-col bg-[var(--background)] text-[var(--foreground)]">
+      <header className="border-b border-[var(--border-subtle)] bg-[var(--surface-card)]/85 backdrop-blur-md">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3.5 sm:px-6">
+          <div className="flex items-center gap-2.5">
+            <span
+              aria-hidden="true"
+              className="inline-flex size-8 items-center justify-center rounded-xl bg-[var(--accent)] text-[var(--accent-contrast)]"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" className="size-4">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z"
+                />
+              </svg>
+            </span>
+            <span className="text-sm font-semibold">AI Chatbox</span>
+          </div>
+          <nav aria-label="Primary">
+            <Link
+              href="/frontend/chatbox"
+              className="interactive-btn inline-flex min-h-10 items-center rounded-xl bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-[var(--accent-contrast)]"
             >
-              Learning
-            </a>{" "}
-            center.
+              Open Chatbox
+            </Link>
+          </nav>
+        </div>
+      </header>
+
+      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center px-4 py-14 sm:px-6 sm:py-20">
+        <div className="max-w-2xl">
+          <p className="inline-flex items-center rounded-full border border-[var(--border-subtle)] bg-[var(--surface-card)] px-3 py-1 text-xs font-medium text-[var(--foreground-muted)]">
+            Vercel AI SDK + Next.js
           </p>
+          <h1 className="mt-5 text-[clamp(2rem,1.4rem+3vw,3.25rem)] font-semibold leading-[1.12] tracking-tight text-balance">
+            Conversational AI, designed for clarity and speed.
+          </h1>
+          <p className="mt-4 max-w-[56ch] text-base leading-relaxed text-[var(--foreground-muted)] text-pretty sm:text-lg">
+            Ask questions, explore ideas, and copy responses effortlessly in a responsive chat interface built with modern web standards.
+          </p>
+
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Link
+              href="/frontend/chatbox"
+              className="interactive-btn inline-flex min-h-12 items-center gap-2 rounded-xl bg-[var(--accent)] px-6 py-3 text-base font-semibold text-[var(--accent-contrast)]"
+            >
+              <span>Launch Chatbox</span>
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                className="size-4"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+
+        <section aria-label="Highlights" className="mt-14 grid gap-4 sm:grid-cols-3">
+          {FEATURES.map((feature) => (
+            <div
+              key={feature.title}
+              className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-card)] p-5 shadow-xs"
+            >
+              <h2 className="text-base font-semibold text-balance">{feature.title}</h2>
+              <p className="mt-2 text-sm leading-relaxed text-[var(--foreground-muted)] text-pretty">
+                {feature.description}
+              </p>
+            </div>
+          ))}
+        </section>
       </main>
+
+      <footer className="border-t border-[var(--border-subtle)] py-5 text-center text-xs text-[var(--foreground-muted)]">
+        Built with Next.js App Router and Vercel AI SDK
+      </footer>
     </div>
   );
 }
