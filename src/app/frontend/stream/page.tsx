@@ -81,26 +81,30 @@ const StreamPage = () => {
                     {messages.length === 0 && !isLoading ? (
                         <div className="flex h-full items-center justify-center text-center">
                             <p className="text-sm text-[var(--foreground-muted)]">
-                                Your response will display here.
+                                Ask Anything from AI
                             </p>
                         </div>
                     ) : (
                         <div className="mx-auto flex max-w-[65ch] flex-col gap-4">
                             {messages.map((message) => (
-                                <div
-                                    key={message.id}
-                                    className={
-                                        message.role === "user"
-                                            ? "self-end rounded-2xl bg-[var(--accent)] px-4 py-2.5 text-[var(--accent-contrast)]"
-                                            : "self-start rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-muted)] px-4 py-2.5 text-[var(--foreground)]"
-                                    }
-                                >
-                                    <p className="whitespace-pre-wrap break-words text-[0.95rem] leading-relaxed text-pretty">
-                                        {message.parts
-                                            .filter((part) => part.type === "text")
-                                            .map((part) => part.text)
-                                            .join("")}
-                                    </p>
+                                <div key={message.id}>
+                                    <p className="p-2 text-blue-500">{message.role === "user" ? "You:" : "AI:"}</p>
+                                    <div
+
+                                        className={
+                                            message.role === "user"
+                                                ? "self-end rounded-2xl bg-[var(--accent)] px-4 py-2.5 text-[var(--accent-contrast)]"
+                                                : "self-start rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-muted)] px-4 py-2.5 text-[var(--foreground)]"
+                                        }
+                                    >
+
+                                        <p className="whitespace-pre-wrap break-words text-[0.95rem] leading-relaxed text-pretty">
+                                            {message.parts
+                                                .filter((part) => part.type === "text")
+                                                .map((part) => part.text)
+                                                .join("")}
+                                        </p>
+                                    </div>
                                 </div>
                             ))}
                             {status === "submitted" && (
@@ -138,7 +142,7 @@ const StreamPage = () => {
                         <button
                             type="submit"
                             onClick={() => stop()}
-                            className="interactive-btn inline-flex min-h-11 min-w-20 shrink-0 items-center justify-center rounded-xl bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[var(--accent-contrast)] disabled:cursor-not-allowed disabled:opacity-55"
+                            className="interactive-btn inline-flex min-h-11 min-w-20 shrink-0 items-center justify-center rounded-xl bg-red-500 px-5 py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-55"
                         >
                             Stop
                         </button>
