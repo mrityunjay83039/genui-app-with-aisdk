@@ -1,39 +1,24 @@
 "use client";
 
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
 import { useId, useState } from "react";
 
 const ChatBox = () => {
   const [prompt, setPrompt] = useState<string>("");
-  const [response, setResponse] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // const [loading, setLoading] = useState(false);
   const inputId = useId();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    setPrompt("");
+  const { messages, sendMessage, stop, status, error } = useChat({
+    transport: new DefaultChatTransport({
+      api: "/api/stream",
+    })
+  });
+  const isLoading = status === 'submitted' || status === 'streaming';
 
-    try {
-      const res = await fetch("/api/completion", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ prompt }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || "something went wrong!");
-      }
-      setResponse(data.text);
-    } catch (err) {
-      console.log(err);
-      setError(err instanceof Error ? err.message : "something went wrong!");
-    } finally {
-      setLoading(false);
-    }
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    sendMessage({ text: prompt });
   };
 
   return (
@@ -85,13 +70,13 @@ const ChatBox = () => {
                 clipRule="evenodd"
               />
             </svg>
-            <span>{error}</span>
+            <span>{error.message}</span>
           </div>
         )}
 
         {/* Response will display here */}
         <div className="chat-scroller flex-1 rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-card)] p-5 shadow-xs sm:p-6">
-          {loading ? (
+          {isLoading ? (
             <div className="flex h-full flex-col items-center justify-center gap-3 text-[var(--foreground-muted)]">
               <progress
                 aria-label="Loading response"
@@ -99,21 +84,28 @@ const ChatBox = () => {
               />
               <span className="text-sm font-medium">Loading...</span>
             </div>
-          ) : response ? (
-            <p className="mx-auto max-w-[65ch] whitespace-pre-wrap break-words text-[0.95rem] leading-relaxed text-[var(--foreground)] text-pretty">
-              {response}
+          ) : messages ? messages.map((m) => {
+            return <p className="mx-auto max-w-[65ch] whitespace-pre-wrap break-words text-[0.95rem] leading-relaxed text-[var(--foreground)] text-pretty">
+              Role: {m.role}
+              {m.parts.map((response, index) => {
+                if (response.type === 'text') {
+                  return <span key={index}>{response.text}</span>;
+                }
+                return null;
+              })}
             </p>
-          ) : (
+          }) : (
             <div className="flex h-full items-center justify-center text-center">
               <p className="text-sm text-[var(--foreground-muted)]">
                 Your response will display here.
               </p>
             </div>
-          )}
-        </div>
+          )
+          }
+        </div >
 
         {/* ChatBox Form fields */}
-        <form
+        < form
           onSubmit={handleSubmit}
           name="chatbox"
           className="flex shrink-0 items-center gap-2.5 rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-card)] p-2 shadow-xs transition-colors focus-within:border-[var(--accent)]"
@@ -132,14 +124,14 @@ const ChatBox = () => {
           />
           <button
             type="submit"
-            disabled={loading}
+            disabled={isLoading}
             className="interactive-btn inline-flex min-h-11 min-w-20 shrink-0 items-center justify-center rounded-xl bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[var(--accent-contrast)] disabled:cursor-not-allowed disabled:opacity-55"
           >
             Send
           </button>
-        </form>
-      </main>
-    </div>
+        </form >
+      </main >
+    </div >
   );
 };
 
