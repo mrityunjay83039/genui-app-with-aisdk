@@ -22,7 +22,7 @@ export async function POST(req: Request) {
   try {
     const result = streamText({
       model: google(MODEL),
-      system: "You are a helpful, concise software engineering assistant",
+      instructions: "You are a helpful, concise software engineering assistant",
       messages: await convertToModelMessages(messages),
       experimental_transform: smoothStream({
         delayInMs: 20,
