@@ -9,7 +9,7 @@ const ChatBox = () => {
   // const [loading, setLoading] = useState(false);
   const inputId = useId();
 
-  const { messages, sendMessage, stop, status, error } = useChat({
+  const { messages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
       api: "/api/stream",
     })
@@ -45,7 +45,7 @@ const ChatBox = () => {
                 />
               </svg>
             </span>
-            <h1 className="text-base font-semibold tracking-tight">AI Chatbox</h1>
+            <h1 className="text-base font-semibold tracking-tight">Basic Chat</h1>
           </div>
         </div>
       </header>
@@ -85,15 +85,20 @@ const ChatBox = () => {
               <span className="text-sm font-medium">Loading...</span>
             </div>
           ) : messages ? messages.map((m) => {
-            return <p className="mx-auto max-w-[65ch] whitespace-pre-wrap break-words text-[0.95rem] leading-relaxed text-[var(--foreground)] text-pretty">
-              Role: {m.role}
-              {m.parts.map((response, index) => {
-                if (response.type === 'text') {
-                  return <span key={index}>{response.text}</span>;
-                }
-                return null;
-              })}
-            </p>
+            return (
+              <p
+                key={m.id}
+                className="mx-auto max-w-[65ch] whitespace-pre-wrap break-words text-[0.95rem] leading-relaxed text-[var(--foreground)] text-pretty"
+              >
+                Role: {m.role}
+                {m.parts.map((response, index) => {
+                  if (response.type === 'text') {
+                    return <span key={index}>{response.text}</span>;
+                  }
+                  return null;
+                })}
+              </p>
+            );
           }) : (
             <div className="flex h-full items-center justify-center text-center">
               <p className="text-sm text-[var(--foreground-muted)]">

@@ -38,12 +38,18 @@ export default function Home() {
             </span>
             <span className="text-sm font-semibold">AI Chatbox</span>
           </div>
-          <nav aria-label="Primary">
+          <nav aria-label="Primary" className="flex items-center gap-2">
             <Link
-              href="/frontend/chatbox"
+              href="/basic-chat"
+              className="interactive-btn inline-flex min-h-10 items-center rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-card)] px-3.5 py-2 text-sm font-semibold text-[var(--foreground)]"
+            >
+              Basic Chat
+            </Link>
+            <Link
+              href="/streaming-chat"
               className="interactive-btn inline-flex min-h-10 items-center rounded-xl bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-[var(--accent-contrast)]"
             >
-              Open Chatbox
+              Streaming Chat
             </Link>
           </nav>
         </div>
@@ -63,10 +69,10 @@ export default function Home() {
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link
-              href="/frontend/chatbox"
+              href="/basic-chat"
               className="interactive-btn inline-flex min-h-12 items-center gap-2 rounded-xl bg-[var(--accent)] px-6 py-3 text-base font-semibold text-[var(--accent-contrast)]"
             >
-              <span>Launch Chatbox</span>
+              <span>Basic Chat</span>
               <svg
                 aria-hidden="true"
                 viewBox="0 0 20 20"
@@ -79,6 +85,12 @@ export default function Home() {
                   clipRule="evenodd"
                 />
               </svg>
+            </Link>
+            <Link
+              href="/streaming-chat"
+              className="interactive-btn inline-flex min-h-12 items-center gap-2 rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-card)] px-6 py-3 text-base font-semibold text-[var(--foreground)]"
+            >
+              <span>Streaming Chat</span>
             </Link>
           </div>
         </div>

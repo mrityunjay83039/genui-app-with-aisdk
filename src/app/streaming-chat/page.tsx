@@ -7,7 +7,7 @@ import { useId, useState } from "react";
 const StreamPage = () => {
     const inputId = useId();
     const [input, setInput] = useState("");
-    const { messages, sendMessage, status, error } = useChat({
+    const { messages, sendMessage, status, error, stop } = useChat({
         transport: new DefaultChatTransport({
             api: "/api/stream",
         }),
@@ -47,7 +47,7 @@ const StreamPage = () => {
                                 />
                             </svg>
                         </span>
-                        <h1 className="text-base font-semibold tracking-tight">AI Chatbox</h1>
+                        <h1 className="text-base font-semibold tracking-tight">Streaming Chat</h1>
                     </div>
                 </div>
             </header>
