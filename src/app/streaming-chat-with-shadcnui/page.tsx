@@ -43,23 +43,23 @@ type ChatMessage = UIMessage;
 const PROMPT_SUGGESTIONS = [
     {
         icon: LightbulbIcon,
-        title: "Brainstorm ideas",
-        prompt: "Brainstorm 5 innovative ideas for a full-stack Next.js and AI SDK project.",
+        title: "Know Vercel AI SDK",
+        prompt: "What is Vecel AI SDK. What can be done with it?",
     },
     {
         icon: Code2Icon,
-        title: "Write clean code",
-        prompt: "Write a reusable TypeScript hook for debouncing user search input in React.",
+        title: "Learn SSE(Server Sent Event)",
+        prompt: "What is SSE and how to use it. Give a complete example with code.",
     },
     {
         icon: CompassIcon,
-        title: "Explain a concept",
-        prompt: "Explain how React Server Components and Server Actions work together.",
+        title: "Shadcn UI for AI Components",
+        prompt: "How to use Shadcn to create AI Components with AI SDK?",
     },
     {
         icon: FileTextIcon,
-        title: "Draft an outline",
-        prompt: "Draft a concise project roadmap for shipping an MVP in two weeks.",
+        title: "How to use Markdown",
+        prompt: "How to use Markdown in AI Chatbox created with AI SDK?",
     },
 ];
 
