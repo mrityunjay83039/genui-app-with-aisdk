@@ -7,6 +7,7 @@ import {
   toUIMessageStream,
   type UIMessage,
 } from "ai";
+import { getWeather } from "../tools/tools";
 
 export async function POST(req: Request) {
   const { messages }: { messages: UIMessage[] } = await req.json();
@@ -29,6 +30,7 @@ export async function POST(req: Request) {
         chunking: "word",
       }),
       abortSignal: req.signal,
+      tools: { getWeather }
     });
 
     return createUIMessageStreamResponse({

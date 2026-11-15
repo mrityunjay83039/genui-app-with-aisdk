@@ -177,41 +177,60 @@ export default function StreamingChatWithShadcn() {
                                 >
                                     {messages.map((message) => {
                                         const isUser = message.role === "user";
-                                        const reply = message.parts
-                                            .filter((part) => part.type === "text")
-                                            .map((part) => part.text)
-                                            .join("");
-
-                                        return (
-                                            <MessageScrollerItem
-                                                key={message.id}
-                                                messageId={message.id}
-                                                scrollAnchor={isUser}
-                                            >
-                                                <Message align={isUser ? "end" : "start"}>
-                                                    <MessageContent className="w-full max-w-full">
-                                                        {isUser ? (
-                                                            /* User bubble: sleek rounded pill on the right */
-                                                            <div className="ml-auto w-fit max-w-[80%] rounded-3xl bg-muted/80 dark:bg-muted/60 px-5 py-3 text-sm whitespace-pre-wrap leading-relaxed">
-                                                                {reply}
-                                                            </div>
-                                                        ) : (
-                                                            /* Assistant response: full-width natural text with markdown */
-                                                            <div className="w-full text-sm leading-relaxed pl-1">
-                                                                {reply ? (
-                                                                    <Markdown>{reply}</Markdown>
+                                        return message.parts.map((part, index) => {
+                                            switch (part.type) {
+                                                case "text":
+                                                    return <MessageScrollerItem key={part.id || index}>
+                                                        <Message align={isUser ? "end" : "start"}>
+                                                            <MessageContent className="w-full max-w-full">
+                                                                {isUser ? (
+                                                                    /* User bubble: sleek rounded pill on the right */
+                                                                    <div className="ml-auto w-fit max-w-[80%] rounded-3xl bg-muted/90 dark:bg-muted/60 px-5 py-3 text-sm whitespace-pre-wrap leading-relaxed shadow-2xs">
+                                                                        {part.text}
+                                                                    </div>
                                                                 ) : (
-                                                                    <div className="flex items-center gap-2 text-muted-foreground">
-                                                                        <span className="inline-block size-2 rounded-full bg-primary animate-pulse" />
-                                                                        <span>Thinking...</span>
+                                                                    /* Assistant response: full-width natural text with markdown */
+                                                                    <div className="w-full text-sm leading-relaxed text-foreground pl-1">
+                                                                        {part.text ? (
+                                                                            <Markdown>{part.text}</Markdown>
+                                                                        ) : (
+                                                                            <div className="flex items-center gap-2 text-muted-foreground">
+                                                                                <span className="inline-block size-2 rounded-full bg-primary animate-pulse" />
+                                                                                <span>Thinking...</span>
+                                                                            </div>
+                                                                        )}
                                                                     </div>
                                                                 )}
-                                                            </div>
-                                                        )}
-                                                    </MessageContent>
-                                                </Message>
-                                            </MessageScrollerItem>
-                                        );
+                                                            </MessageContent>
+                                                        </Message>
+                                                    </MessageScrollerItem>
+
+                                                case "tool-getWeather":
+                                                    return (
+                                                        <MessageScrollerItem key={`${message.id}-${index}`} messageId={message.id}>
+                                                            <Message align="start">
+                                                                <MessageContent className="w-full">
+                                                                    <h2 className="text-sm capitalize font-semibold">Weather for {part.input.city}</h2>
+                                                                    {part.state === "output-available" ? (
+                                                                        <div>
+                                                                            <p>Temperature: {Math.round(part?.output?.temp)}°C</p>
+                                                                            <p>Min Temp.: {Math.round(part?.output?.tempmin)}°C</p>
+                                                                            <p>Max Temp.: {Math.round(part?.output?.tempmax)}°C</p>
+                                                                        </div>
+                                                                    ) : (
+                                                                        <div className="text-muted-foreground animate-pulse">Fetching weather data...</div>
+                                                                    )}
+                                                                </MessageContent>
+                                                            </Message>
+                                                        </MessageScrollerItem>
+
+
+                                                    );
+                                                default:
+                                                    return null;
+                                            }
+                                        })
+
                                     })}
                                 </MessageScrollerContent>
                             </MessageScrollerViewport>
