@@ -83,7 +83,6 @@ function MarkdownCodeBlock({
 /* Code Discriminator (Inline vs Fenced)                                      */
 /* -------------------------------------------------------------------------- */
 function MarkdownCode({
-    node,
     className,
     children,
     ...props

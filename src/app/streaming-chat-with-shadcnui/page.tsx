@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport, type UIMessage } from "ai";
+import { DefaultChatTransport } from "ai";
 import {
     ArrowUpIcon,
     SquareIcon,
@@ -12,6 +12,7 @@ import {
     Code2Icon,
     CompassIcon,
     FileTextIcon,
+    TerminalIcon,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -37,8 +38,9 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Markdown } from "@/components/ui/markdown";
+import { Trace, TraceCollapsible, TraceCollapsibleContent, TraceCollapsibleTrigger, TraceIcon, TraceLine, TraceTitle } from "@/components/ui/trace";
+import { CodeBlockContent, CodeBlock } from "@/components/ui/code-block";
 
-type ChatMessage = UIMessage;
 
 const PROMPT_SUGGESTIONS = [
     {
@@ -180,7 +182,7 @@ export default function StreamingChatWithShadcn() {
                                         return message.parts.map((part, index) => {
                                             switch (part.type) {
                                                 case "text":
-                                                    return <MessageScrollerItem key={part.id || index}>
+                                                    return <MessageScrollerItem key={`${message.id}-${index}`} messageId={message.id} scrollAnchor={isUser}>
                                                         <Message align={isUser ? "end" : "start"}>
                                                             <MessageContent className="w-full max-w-full">
                                                                 {isUser ? (
@@ -205,27 +207,49 @@ export default function StreamingChatWithShadcn() {
                                                         </Message>
                                                     </MessageScrollerItem>
 
-                                                case "tool-getWeather":
+                                                case "tool-getWeather": {
+                                                    const partKey = `${message.id}-${index}`;
+                                                    const output = part.output as { temp?: number; tempmin?: number; tempmax?: number; error?: string } | undefined;
+                                                    const isError = part.state === "output-error" || Boolean(output?.error);
+
                                                     return (
-                                                        <MessageScrollerItem key={`${message.id}-${index}`} messageId={message.id}>
-                                                            <Message align="start">
-                                                                <MessageContent className="w-full">
-                                                                    <h2 className="text-sm capitalize font-semibold">Weather for {part.input.city}</h2>
-                                                                    {part.state === "output-available" ? (
-                                                                        <div>
-                                                                            <p>Temperature: {Math.round(part?.output?.temp)}°C</p>
-                                                                            <p>Min Temp.: {Math.round(part?.output?.tempmin)}°C</p>
-                                                                            <p>Max Temp.: {Math.round(part?.output?.tempmax)}°C</p>
-                                                                        </div>
-                                                                    ) : (
-                                                                        <div className="text-muted-foreground animate-pulse">Fetching weather data...</div>
-                                                                    )}
-                                                                </MessageContent>
-                                                            </Message>
-                                                        </MessageScrollerItem>
-
-
+                                                        <Trace key={partKey}>
+                                                            <TraceCollapsible defaultOpen>
+                                                                <TraceCollapsibleTrigger>
+                                                                    <TraceLine status={isError ? "error" : undefined}>
+                                                                        <TraceIcon>
+                                                                            <TerminalIcon />
+                                                                        </TraceIcon>
+                                                                        <TraceTitle>{isError ? "Weather Tool Failed" : "Weather Tool Called"}</TraceTitle>
+                                                                    </TraceLine>
+                                                                </TraceCollapsibleTrigger>
+                                                                <TraceCollapsibleContent>
+                                                                    <CodeBlock size="sm">
+                                                                        <CodeBlockContent wrap className="max-h-64">
+                                                                            {part.state === "output-error" ? (
+                                                                                part.errorText
+                                                                            ) : part.state === "output-available" ? (
+                                                                                output?.error ? (
+                                                                                    <p className="text-destructive font-sans">{output.error}</p>
+                                                                                ) : output?.temp != null ? (
+                                                                                    <div>
+                                                                                        <p>Temperature: {Math.round(output.temp)}°C</p>
+                                                                                        <p>Min Temp.: {output.tempmin != null ? `${Math.round(output.tempmin)}°C` : "N/A"}</p>
+                                                                                        <p>Max Temp.: {output.tempmax != null ? `${Math.round(output.tempmax)}°C` : "N/A"}</p>
+                                                                                    </div>
+                                                                                ) : (
+                                                                                    "Please check the city name"
+                                                                                )
+                                                                            ) : (
+                                                                                <div className="text-muted-foreground animate-pulse">Fetching weather data...</div>
+                                                                            )}
+                                                                        </CodeBlockContent>
+                                                                    </CodeBlock>
+                                                                </TraceCollapsibleContent>
+                                                            </TraceCollapsible>
+                                                        </Trace>
                                                     );
+                                                }
                                                 default:
                                                     return null;
                                             }
@@ -262,7 +286,7 @@ export default function StreamingChatWithShadcn() {
                                         <InputGroupButton
                                             type="button"
                                             variant="outline"
-                                            size="icon"
+                                            size="icon-sm"
                                             onClick={stop}
                                             className="size-8 rounded-full ml-auto"
                                             aria-label="Stop generation"
@@ -273,7 +297,7 @@ export default function StreamingChatWithShadcn() {
                                         <InputGroupButton
                                             type="submit"
                                             variant="default"
-                                            size="icon"
+                                            size="icon-sm"
                                             disabled={!canSend}
                                             className="size-8 rounded-full ml-auto disabled:opacity-20 transition-opacity"
                                             aria-label="Send message"
