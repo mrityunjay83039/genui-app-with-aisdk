@@ -2,6 +2,7 @@ import { google } from "@ai-sdk/google";
 import {
   convertToModelMessages,
   createUIMessageStreamResponse,
+  isStepCount,
   smoothStream,
   streamText,
   toUIMessageStream,
@@ -30,7 +31,8 @@ export async function POST(req: Request) {
         chunking: "word",
       }),
       abortSignal: req.signal,
-      tools: { getWeather }
+      tools: { getWeather },
+      stopWhen: isStepCount(3)
     });
 
     return createUIMessageStreamResponse({
