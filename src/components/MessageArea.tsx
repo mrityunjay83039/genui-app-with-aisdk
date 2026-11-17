@@ -4,13 +4,10 @@ import { TerminalIcon } from "lucide-react";
 import { Markdown } from "./ui/markdown";
 import { Message, MessageContent } from "./ui/message";
 import { MessageScrollerContent, MessageScrollerViewport, MessageScroller, MessageScrollerItem, MessageScrollerButton, MessageScrollerProvider } from "./ui/message-scroller";
-import { Trace, TraceCollapsible, TraceCollapsibleContent, TraceCollapsibleTrigger, TraceIcon, TraceLine, TraceTitle } from "./ui/trace";
-import { CodeBlock } from "streamdown";
-import { CodeBlockContent } from "./ui/code-block";
 
 const MessageArea = ({ messages, busy, }) => {
     return <MessageScrollerProvider>
-        <MessageScroller>
+        <MessageScroller className="min-h-[75vh]">
             <MessageScrollerViewport className="flex-1">
                 <MessageScrollerContent
                     aria-busy={busy}
@@ -46,49 +43,6 @@ const MessageArea = ({ messages, busy, }) => {
                                         </Message>
                                     </MessageScrollerItem>
 
-                                case "tool-getWeather": {
-                                    const partKey = `${message.id}-${index}`;
-                                    const output = part.output as { temp?: number; tempmin?: number; tempmax?: number; error?: string } | undefined;
-                                    const isError = part.state === "output-error" || Boolean(output?.error);
-
-                                    return (
-                                        <Trace key={partKey}>
-                                            <TraceCollapsible defaultOpen>
-                                                <TraceCollapsibleTrigger>
-                                                    <TraceLine status={isError ? "error" : undefined}>
-                                                        <TraceIcon>
-                                                            <TerminalIcon />
-                                                        </TraceIcon>
-                                                        <TraceTitle>{isError ? "Weather Tool Failed" : "Weather Tool Called"}</TraceTitle>
-                                                    </TraceLine>
-                                                </TraceCollapsibleTrigger>
-                                                <TraceCollapsibleContent>
-                                                    <CodeBlock size="sm">
-                                                        <CodeBlockContent wrap className="max-h-64">
-                                                            {part.state === "output-error" ? (
-                                                                part.errorText
-                                                            ) : part.state === "output-available" ? (
-                                                                output?.error ? (
-                                                                    <p className="text-destructive font-sans">{output.error}</p>
-                                                                ) : output?.temp != null ? (
-                                                                    <div>
-                                                                        <p>Temperature: {Math.round(output.temp)}°C</p>
-                                                                        <p>Min Temp.: {output.tempmin != null ? `${Math.round(output.tempmin)}°C` : "N/A"}</p>
-                                                                        <p>Max Temp.: {output.tempmax != null ? `${Math.round(output.tempmax)}°C` : "N/A"}</p>
-                                                                    </div>
-                                                                ) : (
-                                                                    "Please check the city name"
-                                                                )
-                                                            ) : (
-                                                                <div className="text-muted-foreground animate-pulse">Fetching weather data...</div>
-                                                            )}
-                                                        </CodeBlockContent>
-                                                    </CodeBlock>
-                                                </TraceCollapsibleContent>
-                                            </TraceCollapsible>
-                                        </Trace>
-                                    );
-                                }
                                 default:
                                     return null;
                             }

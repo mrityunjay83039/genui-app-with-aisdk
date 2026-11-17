@@ -2,11 +2,11 @@ import { ArrowUpIcon, SquareIcon } from "lucide-react";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupTextarea } from "./ui/input-group";
 import React from "react";
 
-const ChatForm = ({ onSubmit, status, handleOnStop, draft, setDraft, busy, canSend }) => {
+const ChatForm = ({ onSubmit, handleOnStop, draft, setDraft, busy, canSend }) => {
     const formRef = React.useRef<HTMLFormElement>(null);
 
 
-    return <form ref={formRef} onSubmit={onSubmit} className="w-full">
+    return <form ref={formRef} onSubmit={onSubmit} className="w-full p-4">
         <InputGroup className="rounded-[26px] border bg-muted/40 dark:bg-muted/20 px-3 py-2 shadow-xs transition-colors focus-within:border-ring/60 focus-within:bg-background">
             <InputGroupTextarea
                 value={draft}
